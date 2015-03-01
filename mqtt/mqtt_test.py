@@ -7,10 +7,10 @@
 # which accompanies this distribution. 
 #
 # The Eclipse Distribution License is available at 
-#   http://www.eclipse.org/org/documents/edl-v10.php.
+# http://www.eclipse.org/org/documents/edl-v10.php.
 #
 # Contributors:
-#    Roger Light - initial implementation
+# Roger Light - initial implementation
 # Copyright (c) 2010,2011 Roger Light <roger@atchoo.org>
 # All rights reserved.
 
@@ -20,21 +20,26 @@ import paho.mqtt.client as mqtt
 import StringIO
 import csv
 
+
 def on_connect(mqttc, obj, flags, rc):
-    print("rc: "+str(rc))
+    print("rc: " + str(rc))
+
 
 def on_message(mqttc, obj, msg):
-    print(msg.topic+" "+str(msg.qos)+" "+str(msg.payload))
+    print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload))
     x = StringIO.StringIO(msg.payload)
     reader = csv.reader(x, delimiter=',')
     for row in reader:
         print '\t'.join(row)
 
+
 def on_publish(mqttc, obj, mid):
-    print("mid: "+str(mid))
+    print("mid: " + str(mid))
+
 
 def on_subscribe(mqttc, obj, mid, granted_qos):
-    print("Subscribed: "+str(mid)+" "+str(granted_qos))
+    print("Subscribed: " + str(mid) + " " + str(granted_qos))
+
 
 def on_log(mqttc, obj, level, string):
     print(string)
@@ -49,9 +54,8 @@ mqttc.on_connect = on_connect
 mqttc.on_publish = on_publish
 mqttc.on_subscribe = on_subscribe
 # Uncomment to enable debug messages
-#mqttc.on_log = on_log
-mqttc.connect("192.168.1.50", 1883, 60)
+# mqttc.on_log = on_log
+mqttc.connect("192.168.1.12", 1883, 60)
 mqttc.subscribe("TNode", 0)
-
 
 mqttc.loop_forever()
