@@ -7,6 +7,8 @@
 mytokens.h
 mytokens.py
 
+
+
 # Compiled source #
 ###################
 *.com
@@ -99,3 +101,6 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# PyCharm configuration files
+.idea/
