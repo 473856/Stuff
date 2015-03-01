@@ -20,10 +20,12 @@ import StringIO
 import csv
 
 import paho.mqtt.client as mqtt
+import urllib2
 
 from mytokens import EMONCMS_WRITE_API_KEY
 
-print EMONCMS_WRITE_API_KEY
+emoncms_url_init = 'http://emoncms.org/input/post.json?apikey=' + EMONCMS_WRITE_API_KEY
+
 
 def on_connect(mqttc, obj, flags, rc):
     print("rc: " + str(rc))
@@ -33,8 +35,29 @@ def on_message(mqttc, obj, msg):
     print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload))
     x = StringIO.StringIO(msg.payload)
     reader = csv.reader(x, delimiter=',')
-    for row in reader:
-        print '\t'.join(row)
+    for datarow in reader:
+        TNodeData = dict(date=datarow[0], group=datarow[1], node=datarow[2], Vcc=datarow[3], T_in=datarow[4],
+                         T_out=datarow[5])
+
+    # construct URL
+    emoncms_url = emoncms_url_init + '&node=' + TNodeData['node'] + '&csv=' + TNodeData['Vcc'] + ',' + TNodeData[
+        'T_in'] + ',' + TNodeData['T_out']
+    print emoncms_url
+
+    # send data to emoncms, incl. error handling
+    request = urllib2.Request(emoncms_url)
+    try:
+        response = urllib2.urlopen(request)
+    except urllib2.HTTPError, e:
+        print('HTTPError = ' + str(e.code))
+    except urllib2.URLError, e:
+        print('URLError = ' + str(e.reason))
+    except httplib.HTTPException, e:
+        print('HTTPException')
+    except Exception:
+        import traceback
+
+        print('generic exception: ' + traceback.format_exc())
 
 
 def on_publish(mqttc, obj, mid):
