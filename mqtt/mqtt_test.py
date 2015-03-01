@@ -16,10 +16,14 @@
 
 # This shows a simple example of an MQTT subscriber.
 
-import paho.mqtt.client as mqtt
 import StringIO
 import csv
 
+import paho.mqtt.client as mqtt
+
+from mytokens import EMONCMS_WRITE_API_KEY
+
+print EMONCMS_WRITE_API_KEY
 
 def on_connect(mqttc, obj, flags, rc):
     print("rc: " + str(rc))
