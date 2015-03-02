@@ -49,9 +49,11 @@ def on_message(mqttc, obj, msg):
     # Use requests instead of urllib2 to catch [Errno 54] Connection reset by peer
     try:
         response = requests.get(emoncms_url, timeout=1)
-    except ConnectionError as e:  # This is the correct syntax
+    except requests.ConnectionError as e:  # This is the correct syntax
         print e
-        response = "No response"
+        response = 'No response'
+    except:
+        response = 'Unidentified exception ...'
 
     print response
 
