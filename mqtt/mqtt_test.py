@@ -4,9 +4,9 @@
 #
 # All rights reserved. This program and the accompanying materials
 # are made available under the terms of the Eclipse Distribution License v1.0
-# which accompanies this distribution. 
+# which accompanies this distribution.
 #
-# The Eclipse Distribution License is available at 
+# The Eclipse Distribution License is available at
 # http://www.eclipse.org/org/documents/edl-v10.php.
 #
 # Contributors:
@@ -21,6 +21,7 @@ import csv
 
 import paho.mqtt.client as mqtt
 import urllib2
+import requests
 
 from mytokens import EMONCMS_WRITE_API_KEY
 
@@ -44,20 +45,29 @@ def on_message(mqttc, obj, msg):
         'T_in'] + ',' + TNodeData['T_out']
     print emoncms_url
 
-    # send data to emoncms, incl. error handling
-    request = urllib2.Request(emoncms_url)
+    # send data to emoncms, incl. error handling.
+    # Use requests instead of urllib2 to catch [Errno 54] Connection reset by peer
     try:
-        response = urllib2.urlopen(request)
-    except urllib2.HTTPError, e:
-        print('HTTPError = ' + str(e.code))
-    except urllib2.URLError, e:
-        print('URLError = ' + str(e.reason))
-    except httplib.HTTPException, e:
-        print('HTTPException')
-    except Exception:
-        import traceback
+        response = requests.get(emoncms_url, timeout=1)
+    except ConnectionError as e:  # This is the correct syntax
+        print e
+        response = "No response"
 
-        print('generic exception: ' + traceback.format_exc())
+    print response
+
+    # request = urllib2.Request(emoncms_url)
+    # try:
+    # response = urllib2.urlopen(request)
+    # except urllib2.HTTPError, e:
+    #     print('HTTPError = ' + str(e.code))
+    # except urllib2.URLError, e:
+    #     print('URLError = ' + str(e.reason))
+    # except httplib.HTTPException, e:
+    #     print('HTTPException')
+    # except Exception:
+    #     import traceback
+    #
+    #     print('generic exception: ' + traceback.format_exc())
 
 
 def on_publish(mqttc, obj, mid):
