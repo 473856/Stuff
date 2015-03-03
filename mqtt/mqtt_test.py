@@ -56,20 +56,7 @@ def on_message(mqttc, obj, msg):
         response = 'Unidentified exception ...'
 
     print response
-
-    # request = urllib2.Request(emoncms_url)
-    # try:
-    # response = urllib2.urlopen(request)
-    # except urllib2.HTTPError, e:
-    #     print('HTTPError = ' + str(e.code))
-    # except urllib2.URLError, e:
-    #     print('URLError = ' + str(e.reason))
-    # except httplib.HTTPException, e:
-    #     print('HTTPException')
-    # except Exception:
-    #     import traceback
-    #
-    #     print('generic exception: ' + traceback.format_exc())
+    print
 
 
 def on_publish(mqttc, obj, mid):
