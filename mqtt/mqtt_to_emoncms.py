@@ -1,26 +1,19 @@
 #!/usr/bin/python
 
-# Copyright (c) 2010-2013 Roger Light <roger@atchoo.org>
 #
-# All rights reserved. This program and the accompanying materials
-# are made available under the terms of the Eclipse Distribution License v1.0
-# which accompanies this distribution.
+# 1) Read TNode data from mqtt broker (here: moquitto on local network)
+# 2) publish to emoncms via get(url), also taking care of timeouts / exceptions
 #
-# The Eclipse Distribution License is available at
-# http://www.eclipse.org/org/documents/edl-v10.php.
+# Assumptions:
+# - JNode micro TNode data structure
+# - sending to YunHub 1.03 MQTT
 #
-# Contributors:
-# Roger Light - initial implementation
-# Copyright (c) 2010,2011 Roger Light <roger@atchoo.org>
-# All rights reserved.
-
-# This shows a simple example of an MQTT subscriber.
+# 150304 mqtt_to_emoncms 1.0
+#
 
 import StringIO
 import csv
-
 import paho.mqtt.client as mqtt
-import urllib2
 import requests
 
 from mytokens import EMONCMS_WRITE_API_KEY
@@ -29,7 +22,7 @@ emoncms_url_init = 'http://emoncms.org/input/post.json?apikey=' + EMONCMS_WRITE_
 
 
 def on_connect(mqttc, obj, flags, rc):
-    print("rc: " + str(rc))
+    print('mqtt connect established, rc: ' + str(rc))
 
 
 def on_message(mqttc, obj, msg):
@@ -79,8 +72,13 @@ mqttc.on_message = on_message
 mqttc.on_connect = on_connect
 mqttc.on_publish = on_publish
 mqttc.on_subscribe = on_subscribe
+
 # Uncomment to enable debug messages
 # mqttc.on_log = on_log
+
+print '###'
+print '### mqtt_to_emoncms v1.0 150304'
+print '###'
 mqttc.connect("192.168.1.12", 1883, 60)
 mqttc.subscribe("TNode", 0)
 
