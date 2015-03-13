@@ -8,7 +8,7 @@
 # - JNode micro TNode data structure
 # - sending to YunHub 1.03 MQTT
 #
-# 150304 mqtt_to_emoncms 1.0
+# 150313 mqtt_to_emoncms 1.01
 #
 
 import StringIO
