@@ -25,6 +25,10 @@ def on_connect(mqttc, obj, flags, rc):
     print('mqtt connect established, rc: ' + str(rc))
 
 
+def on_disconnect(mqttc, obj, flags, rc):
+    print('mqtt disconnected!, rc: ' + str(rc))
+
+
 def on_message(mqttc, obj, msg):
     print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload))
     x = StringIO.StringIO(msg.payload)
