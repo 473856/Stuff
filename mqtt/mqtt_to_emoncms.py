@@ -8,8 +8,8 @@
 # - JNode micro TNode data structure
 # - sending to YunHub 1.03 MQTT
 #
-# 150313 mqtt_to_emoncms 1.01
-#
+
+STARTUP_MESSAGE_VERSION = '150313 mqtt_to_emoncms 1.01'
 
 import StringIO
 import csv
@@ -81,7 +81,9 @@ mqttc.on_subscribe = on_subscribe
 # mqttc.on_log = on_log
 
 print '###'
-print '### mqtt_to_emoncms v1.0 150304'
+print '###'
+print '### ' + STARTUP_MESSAGE_VERSION
+print '###'
 print '###'
 mqttc.connect("192.168.1.12", 1883, 60)
 mqttc.subscribe("TNode", 0)
