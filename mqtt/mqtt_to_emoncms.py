@@ -9,7 +9,7 @@
 # - sending to YunHub 1.03 MQTT
 #
 
-STARTUP_MESSAGE_VERSION = '150313 mqtt_to_emoncms 1.01'
+STARTUP_MESSAGE_VERSION = '150318 mqtt_to_emoncms 1.03'
 
 import StringIO
 import csv
@@ -26,7 +26,7 @@ def on_connect(mqttc, obj, flags, rc):
 
 
 def on_disconnect(mqttc, obj, flags, rc):
-    print('mqtt disconnected!, rc: ' + str(rc))
+    print('!!! mqtt disconnected, rc: ' + str(rc))
 
 
 def on_message(mqttc, obj, msg):
@@ -49,8 +49,10 @@ def on_message(mqttc, obj, msg):
     except requests.ConnectionError as e:  # This is the correct syntax
         print e
         response = 'No response'
+        pass
     except:
         response = 'Unidentified exception ...'
+        pass
 
     print response
     print
@@ -64,11 +66,14 @@ def on_subscribe(mqttc, obj, mid, granted_qos):
     print("Subscribed: " + str(mid) + " " + str(granted_qos))
 
 
+def on_unsubscribe(mqttc, obj, mid, granted_qos):
+    print("!!! Unsubscribed: " + str(mid) + " " + str(granted_qos))
+
+
 def on_log(mqttc, obj, level, string):
     print(string)
 
-# If you want to use a specific client id, use
-# mqttc = mqtt.Client("client-id")
+# If you want to use a specific client id, use mqttc = mqtt.Client("client-id")
 # but note that the client id must be unique on the broker. Leaving the client
 # id parameter empty will generate a random id for you.
 mqttc = mqtt.Client()
@@ -76,16 +81,22 @@ mqttc.on_message = on_message
 mqttc.on_connect = on_connect
 mqttc.on_publish = on_publish
 mqttc.on_subscribe = on_subscribe
+mqttc.on_unsubscribe = on_unsubscribe
 
 # Uncomment to enable debug messages
-# mqttc.on_log = on_log
+#mqttc.on_log = on_log
 
 print '###'
 print '###'
 print '### ' + STARTUP_MESSAGE_VERSION
 print '###'
 print '###'
+print
 mqttc.connect("192.168.1.12", 1883, 60)
 mqttc.subscribe("TNode", 0)
 
-mqttc.loop_forever()
+rc = 0
+while rc == 0:
+    rc = mqttc.loop()
+
+print("rc: " + str(rc))
