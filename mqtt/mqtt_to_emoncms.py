@@ -6,10 +6,10 @@
 #
 # Assumptions:
 # - JNode micro TNode data structure
-# - sending to YunHub 1.03 MQTT
+# - sending to YunHub 1.03a MQTT
 #
 
-STARTUP_MESSAGE_VERSION = '150411 mqtt_to_emoncms 1.05 beta'
+STARTUP_MESSAGE_VERSION = '150514 mqtt_to_emoncms 1.06'
 
 import StringIO
 import csv
@@ -98,5 +98,5 @@ print
 
 # connect to mqtt server. Subscription takes place in on_connect.
 # Timeout interval 60s. retry_first_connection=True
-mqttc.connect("192.168.1.12", 1883, 60)
+mqttc.connect("192.168.178.27", 1883, 60)
 mqttc.loop_forever(retry_first_connection=True)
